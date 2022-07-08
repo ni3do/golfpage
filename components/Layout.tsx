@@ -1,10 +1,18 @@
-import { AppShell, Group, MantineProvider, Navbar, Space } from "@mantine/core";
+import {
+  AppShell,
+  Grid,
+  Group,
+  MantineProvider,
+  Navbar,
+  Space,
+} from "@mantine/core";
 import Head from "next/head";
 
 import { ReactNode } from "react";
 import { Brand } from "./Brand";
-import { CreateSetModal } from "./CreateSetModal";
 import { MainLinks } from "./MainLinks";
+import { CreatePlayerModal } from "./modal/CreatePlayerModal";
+import { CreateSetModal } from "./modal/CreateSetModal";
 import { PageTitle } from "./PageTitle";
 
 type Props = {
@@ -50,10 +58,17 @@ export default function Layout({
         >
           <Space h="lg" />
           <Space h="sm" />
-          <Group grow={true}>
-            <PageTitle title={pageTitle} />
-            <CreateSetModal />
-          </Group>
+          <Grid justify="space-between">
+            <Grid.Col span={5}>
+              <PageTitle title={pageTitle} />
+            </Grid.Col>
+            <Grid.Col span={3}>
+              <Group>
+                <CreateSetModal />
+                <CreatePlayerModal />
+              </Group>
+            </Grid.Col>
+          </Grid>
           <Space h="lg" />
           {children}
         </AppShell>

@@ -32,6 +32,8 @@ export type PlayerStatsSchema = {
   losses: number;
   setsPlayed: number;
   points: number;
+  swooshes: number;
+  mapWins: { [mapName: string]: number };
 };
 
 export type StatsSchema = {

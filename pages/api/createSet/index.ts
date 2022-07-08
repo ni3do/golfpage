@@ -1,7 +1,7 @@
 import prisma from "../../../lib/prisma";
 import { SetSchema } from "../../../types/schema";
 
-// POST /api/post
+// POST /api/createSet
 // Required fields in body: title
 // Optional fields in body: content
 export default async function handle(req, res) {

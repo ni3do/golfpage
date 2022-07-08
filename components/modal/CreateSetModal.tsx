@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import React, { useState } from "react";
-import { PlayerSchema, SetPointsSchema, SetSchema } from "../types/schema";
+import { PlayerSchema, SetPointsSchema, SetSchema } from "../../types/schema";
 
 type Props = {
   set?: SetSchema;
@@ -24,7 +24,6 @@ export function CreateSetModal({ set }: Props) {
   const [player1, setPlayer1] = useState("");
   const [points0, setPoints0] = useState(0);
   const [points1, setPoints1] = useState(0);
-  const [winner, setWinner] = useState("");
 
   const form = useForm({
     initialValues: {
@@ -91,7 +90,7 @@ export function CreateSetModal({ set }: Props) {
       };
       console.log(`CreateModal: ${JSON.stringify(formValues, null, 2)}`);
       const body = formValues;
-      await fetch("/api/post", {
+      await fetch("/api/createSet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -163,9 +162,9 @@ export function CreateSetModal({ set }: Props) {
           </Button>
         </Group>
       </Modal>
-      <Group position="right">
-        <Button onClick={() => setOpened(!opened)}>Add Set</Button>
-      </Group>
+      <Button color={"violet"} onClick={() => setOpened(!opened)}>
+        Add Set
+      </Button>
     </>
   );
 }
