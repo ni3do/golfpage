@@ -69,6 +69,7 @@ export function getStats(sets: SetSchema[]) {
     for (let setPoints of set.points) {
       if (Object.keys(stats.playerStats).includes(setPoints.player.name)) {
         stats.playerStats[setPoints.player.name].points += setPoints.points;
+        stats.playerStats[setPoints.player.name].setsPlayed++;
       } else {
         stats.playerStats[setPoints.player.name] = {
           wins: 0,
