@@ -61,7 +61,7 @@ export function getStats(sets: SetSchema[]) {
           losses: 0,
           name: set.winner.name,
           points: 0,
-          setsPlayed: 1,
+          setsPlayed: 0,
         };
       }
     }
