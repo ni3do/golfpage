@@ -10,30 +10,37 @@ generator client {
 
 model Player {
   id        String      @id @default(cuid())
-  name      String    @unique
+  name      String      @unique
   createdAt DateTime    @default(now())
   updatedAt DateTime    @default(now())
-  Set       Set[]
-  SetPoints SetPoints[]
+  sets      Set[]
+  setPoints SetPoints[]
 }
 
 model SetPoints {
-  id        String   @id @default(cuid())
-  setId     Int
-  Set       Set     @relation(fields: [setId], references: [id])
-  points    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  playerName  String
-  player    Player   @relation(fields: [playerName], references: [name])
+  id         String   @id @default(cuid())
+  setId      Int
+  set        Set      @relation(fields: [setId], references: [id])
+  points     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  playerName String
+  player     Player   @relation(fields: [playerName], references: [name])
 }
 
 model Set {
   id        Int         @id @default(autoincrement())
-  map       String
+  mapId     Int
+  map       Map         @relation(fields: [mapId], references: [id])
   points    SetPoints[]
   winner    Player      @relation(fields: [playerId], references: [id])
   createdAt DateTime    @default(now())
   updatedAt DateTime    @default(now())
   playerId  String
+}
+
+model Map {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  Set  Set[]
 }
