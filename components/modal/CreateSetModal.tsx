@@ -20,8 +20,8 @@ export function CreateSetModal({ set }: Props) {
   const edit = set !== undefined;
 
   const [opened, setOpened] = useState(false);
-  const [player0, setPlayer0] = useState("");
-  const [player1, setPlayer1] = useState("");
+  const [player0, setPlayer0] = useState("cryptobroether");
+  const [player1, setPlayer1] = useState("grker");
   const [points0, setPoints0] = useState(0);
   const [points1, setPoints1] = useState(0);
 
