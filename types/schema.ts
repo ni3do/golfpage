@@ -19,7 +19,7 @@ export type SetPointsSchema = {
 
 export type SetSchema = {
   id: number;
-  map: string;
+  map: MapSchema;
   points: SetPointsSchema[];
   winner: PlayerSchema;
   createdAt: String;
@@ -39,4 +39,8 @@ export type PlayerStatsSchema = {
 export type StatsSchema = {
   setCount: number;
   playerStats: { [playerName: string]: PlayerStatsSchema };
+};
+
+export type MapSchema = {
+  name: string;
 };

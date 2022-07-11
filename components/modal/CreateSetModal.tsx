@@ -3,32 +3,40 @@ import {
   Group,
   Modal,
   NumberInput,
+  Select,
   Space,
+  Text,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import React, { useState } from "react";
-import { PlayerSchema, SetPointsSchema, SetSchema } from "../../types/schema";
+import {
+  MapSchema,
+  PlayerSchema,
+  SetPointsSchema,
+  SetSchema,
+} from "../../types/schema";
 
 type Props = {
   set?: SetSchema;
+  maps?: MapSchema[];
 };
 
-export function CreateSetModal({ set }: Props) {
+export function CreateSetModal({ set, maps }: Props) {
   const theme = useMantineTheme();
   const edit = set !== undefined;
 
   const [opened, setOpened] = useState(false);
-  const [player0, setPlayer0] = useState("cryptobroether");
-  const [player1, setPlayer1] = useState("grker");
-  const [points0, setPoints0] = useState(0);
-  const [points1, setPoints1] = useState(0);
 
   const form = useForm({
     initialValues: {
       id: set?.id ?? "",
-      map: set?.map ?? "",
+      player0: set?.points[0]?.player.name ?? "cryptobroether",
+      player1: set?.points[1]?.player.name ?? "grker",
+      points0: set?.points[0]?.points ?? 0,
+      points1: set?.points[1]?.points ?? 0,
+      mapName: set?.map.name ?? "",
       points: set?.points ?? ([] as SetPointsSchema[]),
       winner: set?.winner ?? ({} as PlayerSchema),
       createdAt: set?.createdAt ?? new Date().toISOString(),
@@ -46,7 +54,16 @@ export function CreateSetModal({ set }: Props) {
     e.preventDefault();
     try {
       const formValues = form.values;
-      formValues.points = [
+      let body = {
+        id: formValues.id,
+        map: { name: formValues.mapName },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        points: [],
+        winner: {},
+      };
+
+      body.points = [
         {
           id: "",
           setId: -1,
@@ -55,13 +72,13 @@ export function CreateSetModal({ set }: Props) {
           Set: {} as SetSchema,
           player: {
             id: "",
-            name: player0,
+            name: formValues.player0,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             Set: [] as SetSchema[],
             SetPoints: [] as SetPointsSchema[],
           },
-          points: points0,
+          points: formValues.points0,
         },
         {
           id: "",
@@ -71,25 +88,27 @@ export function CreateSetModal({ set }: Props) {
           Set: {} as SetSchema,
           player: {
             id: "",
-            name: player1,
+            name: formValues.player1,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             Set: [] as SetSchema[],
             SetPoints: [] as SetPointsSchema[],
           },
-          points: points1,
+          points: formValues.points1,
         },
       ];
       formValues.winner = {
         id: "",
-        name: points0 > points1 ? player0 : player1,
+        name:
+          formValues.points0 > formValues.points1
+            ? formValues.player0
+            : formValues.player1,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         Set: [] as SetSchema[],
         SetPoints: [] as SetPointsSchema[],
       };
       console.log(`CreateModal: ${JSON.stringify(formValues, null, 2)}`);
-      const body = formValues;
       await fetch("/api/createSet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -117,37 +136,43 @@ export function CreateSetModal({ set }: Props) {
         centered={true}
         size="55vw"
       >
-        <TextInput
-          placeholder="LiLa Land"
-          label="Map"
-          required
-          {...form.getInputProps("map")}
+        <Select
+          label="Your favorite framework/library"
+          placeholder="Pick one"
+          searchable
+          nothingFound="No options"
+          data={maps.map((map) => ({
+            label: map.name,
+            value: map.name,
+          }))}
+          {...form.getInputProps("mapName")}
         />
         <Space h="sm" />
         <TextInput
           placeholder="cryptobroether"
           label="Player 0 Name"
           required
-          onChange={(e) => setPlayer0(e.target.value)}
+          {...form.getInputProps("player0")}
         />
         <NumberInput
           placeholder="3"
           label="Points player0"
           required
-          onChange={(e) => setPoints0(Number(e))}
+          {...form.getInputProps("points0")}
         />
         <TextInput
           placeholder="grker"
           label="Player 1 Name"
           required
-          onChange={(e) => setPlayer1(e.target.value)}
+          {...form.getInputProps("player1")}
         />
         <NumberInput
           placeholder="0"
           label="Points player1"
           required
-          onChange={(e) => setPoints1(Number(e))}
+          {...form.getInputProps("points1")}
         />
+        <Text>{JSON.stringify(form.values, null, 2)}</Text>
         <Group position="center" mt="xl">
           <Button variant="default" onClick={() => setOpened(false)}>
             Cancel

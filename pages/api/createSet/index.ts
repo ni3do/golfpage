@@ -12,7 +12,9 @@ export default async function handle(req, res) {
 
   const result = await prisma.set.create({
     data: {
-      map: map,
+      map: {
+        connect: { name: map.name },
+      },
       points: {
         createMany: {
           data: points.map((points) => ({

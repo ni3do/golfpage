@@ -9,6 +9,7 @@ import {
 import Head from "next/head";
 
 import { ReactNode } from "react";
+import { MapSchema, SetSchema } from "../types/schema";
 import { Brand } from "./Brand";
 import { MainLinks } from "./MainLinks";
 import { CreatePlayerModal } from "./modal/CreatePlayerModal";
@@ -19,12 +20,15 @@ type Props = {
   children: ReactNode;
   title?: string;
   pageTitle: string;
+  sets?: SetSchema[];
+  maps?: MapSchema[];
 };
 
 export default function Layout({
   children,
   title = "GB Stats",
   pageTitle,
+  maps,
 }: Props) {
   return (
     <div>
@@ -64,7 +68,7 @@ export default function Layout({
             </Grid.Col>
             <Grid.Col span={3}>
               <Group>
-                <CreateSetModal />
+                <CreateSetModal maps={maps} />
                 <CreatePlayerModal />
               </Group>
             </Grid.Col>

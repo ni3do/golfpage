@@ -1,7 +1,11 @@
 import { Badge, Table } from "@mantine/core";
-import { SetPointsSchema } from "../types/schema";
+import { MapSchema, SetPointsSchema, SetSchema } from "../types/schema";
 
-export default function Sets({ sets }) {
+type Props = {
+  sets: SetSchema[];
+  maps: MapSchema[];
+};
+export default function Sets({ sets, maps }: Props) {
   const rows = [] as any[];
 
   console.log(`Sets: ${JSON.stringify(sets, null, 2)}`);

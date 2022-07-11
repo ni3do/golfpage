@@ -1,11 +1,12 @@
 import { Badge, Table } from "@mantine/core";
-import { SetSchema, StatsSchema } from "../types/schema";
+import { MapSchema, SetSchema, StatsSchema } from "../types/schema";
 
 type Props = {
   sets: SetSchema[];
+  maps: MapSchema[];
 };
 
-export default function Leaderboard({ sets }: Props) {
+export default function Leaderboard({ sets, maps }: Props) {
   const rows = [] as any[];
 
   const stats = getStats(sets) as StatsSchema;
@@ -73,12 +74,12 @@ export function getStats(sets: SetSchema[]) {
         stats.playerStats[set.winner.name].wins++;
         if (
           Object.keys(stats.playerStats[set.winner.name].mapWins).includes(
-            set.map
+            set.map.name
           )
         ) {
-          stats.playerStats[set.winner.name].mapWins[set.map]++;
+          stats.playerStats[set.winner.name].mapWins[set.map.name]++;
         } else {
-          stats.playerStats[set.winner.name].mapWins[set.map] = 1;
+          stats.playerStats[set.winner.name].mapWins[set.map.name] = 1;
         }
       } else {
         stats.playerStats[set.winner.name] = {
@@ -90,7 +91,7 @@ export function getStats(sets: SetSchema[]) {
           swooshes: 0,
           mapWins: {},
         };
-        stats.playerStats[set.winner.name].mapWins[set.map] = 1;
+        stats.playerStats[set.winner.name].mapWins[set.map.name] = 1;
       }
     }
 
