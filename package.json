@@ -1,6 +1,7 @@
 {
   "name": "hello-next",
   "version": "1.0.0",
+  "main": "./index.js",
   "description": "",
   "scripts": {
     "dev": "next",

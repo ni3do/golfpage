@@ -20,10 +20,13 @@ const storeSlice = createSlice({
 export const setupPlayers = (): AppThunk => async (dispatch, getState) => {
   const current = selectPlayers(getState());
   if (current.length === 0) {
-    const res = await axios.get("/api/getPlayers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await axios.get(
+      "https://golfblitz-stats.herokuapp.com/api/getPlayers",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     console.log("Setting up players listeners for store: ", res.data);
     dispatch(setPlayers(res.data));
   }
@@ -32,15 +35,19 @@ export const setupPlayers = (): AppThunk => async (dispatch, getState) => {
 export const createPlayer =
   (name: string): AppThunk =>
   async (dispatch) => {
-    const resCreate = await axios.post("/api/createPlayer", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify({ name: name }),
-    });
-    const resGet = await axios.get("/api/getPlayers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
+    const resCreate = await axios.post(
+      "https://golfblitz-stats.herokuapp.com/api/createPlayer",
+      {
+        headers: { "Content-Type": "application/json" },
+        data: JSON.stringify({ name: name }),
+      }
+    );
+    const resGet = await axios.get(
+      "https://golfblitz-stats.herokuapp.com/api/getPlayers",
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
     dispatch(setPlayers(resGet.data));
   };
 
