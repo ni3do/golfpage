@@ -54,6 +54,12 @@ const data = [
     label: "Sets",
     href: "/sets",
   },
+  {
+    icon: <ListCheck size={16} />,
+    color: "teal",
+    label: "Players",
+    href: "/players",
+  },
 ];
 
 export function MainLinks() {

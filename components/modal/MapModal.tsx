@@ -7,26 +7,28 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
 import React, { useState } from "react";
-import { PlayerSchema } from "../../types/schema";
+import { createMap } from "../../store/maps";
+import { store } from "../../store/store";
+import { MapSchema } from "../../types/schema";
 
 type Props = {
-  player?: PlayerSchema;
+  map?: MapSchema;
 };
 
-export function CreatePlayerModal({ player }: Props) {
+export function MapModal({ map }: Props) {
   const theme = useMantineTheme();
-  const edit = player !== undefined;
+  const edit = map !== undefined;
 
   const [opened, setOpened] = useState(false);
 
   const form = useForm({
     initialValues: {
-      name: player?.name ?? "",
+      name: map?.name ?? "",
     },
   });
 
   const resetState = () => {
-    if (player === undefined) {
+    if (map === undefined) {
       form.reset();
     }
   };
@@ -35,13 +37,8 @@ export function CreatePlayerModal({ player }: Props) {
     e.preventDefault();
     try {
       const formValues = form.values;
-      console.log(`Create Player: ${JSON.stringify(formValues, null, 2)}`);
-      const body = formValues;
-      await fetch("/api/createPlayer", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      console.log(`Create Map: ${JSON.stringify(formValues, null, 2)}`);
+      store.dispatch(createMap(formValues.name));
     } catch (error) {
       console.error(error);
     }
@@ -50,7 +47,7 @@ export function CreatePlayerModal({ player }: Props) {
   return (
     <>
       <Modal
-        title="Save Set"
+        title="Add Map"
         overlayColor={
           theme.colorScheme === "dark"
             ? theme.colors.dark[9]
@@ -66,7 +63,7 @@ export function CreatePlayerModal({ player }: Props) {
       >
         <TextInput
           placeholder="Nina Name"
-          label="Player Name"
+          label="Map Name"
           required
           {...form.getInputProps("name")}
         />
@@ -80,12 +77,12 @@ export function CreatePlayerModal({ player }: Props) {
               setOpened(false);
             }}
           >
-            {edit ? "Update" : "Create"}
+            {edit ? "Update" : "Add"}
           </Button>
         </Group>
       </Modal>
       <Button color={"violet"} onClick={() => setOpened(!opened)}>
-        Add Player
+        Add Map
       </Button>
     </>
   );

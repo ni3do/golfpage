@@ -1,13 +1,35 @@
 import { Badge, Table } from "@mantine/core";
-import { MapSchema, SetSchema, StatsSchema } from "../types/schema";
+import { useEffect, useState } from "react";
+import { selectMaps, setupMaps } from "../store/maps";
+import { selectPlayers, setupPlayers } from "../store/players";
+import { selectSets, setupSets } from "../store/sets";
+import { store } from "../store/store";
+import { SetSchema, StatsSchema } from "../types/schema";
 
-type Props = {
-  sets: SetSchema[];
-  maps: MapSchema[];
-};
+type Props = {};
 
-export default function Leaderboard({ sets, maps }: Props) {
+export default function Leaderboard({}: Props) {
   const rows = [] as any[];
+
+  const [players, setPlayers] = useState(selectPlayers(store.getState()));
+  const [maps, setMaps] = useState(selectMaps(store.getState()));
+  const [sets, setSets] = useState(selectSets(store.getState()));
+
+  useEffect(() => {
+    store.dispatch(setupMaps());
+    store.dispatch(setupPlayers());
+    store.dispatch(setupSets());
+
+    const storeUnsubscribe = store.subscribe(() => {
+      setMaps(selectMaps(store.getState()));
+      setPlayers(selectPlayers(store.getState()));
+      setSets(selectSets(store.getState()));
+    });
+
+    return () => {
+      storeUnsubscribe();
+    };
+  }, []);
 
   const stats = getStats(sets) as StatsSchema;
 
@@ -68,7 +90,6 @@ export function getStats(sets: SetSchema[]) {
 
   for (let set of sets) {
     stats.setCount++;
-
     if (set.winner) {
       if (Object.keys(stats.playerStats).includes(set.winner.name)) {
         stats.playerStats[set.winner.name].wins++;
@@ -98,21 +119,21 @@ export function getStats(sets: SetSchema[]) {
     let swooshWin = true;
 
     for (let setPoints of set.points) {
-      if (Object.keys(stats.playerStats).includes(setPoints.player.name)) {
+      if (Object.keys(stats.playerStats).includes(setPoints.playerName)) {
         if (
-          setPoints.player.name !== set.winner.name &&
+          setPoints.playerName !== set.winner.name &&
           setPoints.points !== 0
         ) {
           swooshWin = false;
         }
 
-        stats.playerStats[setPoints.player.name].points += setPoints.points;
-        stats.playerStats[setPoints.player.name].setsPlayed++;
+        stats.playerStats[setPoints.playerName].points += setPoints.points;
+        stats.playerStats[setPoints.playerName].setsPlayed++;
       } else {
-        stats.playerStats[setPoints.player.name] = {
+        stats.playerStats[setPoints.playerName] = {
           wins: 0,
           losses: 0,
-          name: setPoints.player.name,
+          name: setPoints.playerName,
           points: setPoints.points,
           setsPlayed: 1,
           swooshes: 0,

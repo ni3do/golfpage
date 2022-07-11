@@ -8,28 +8,39 @@ import {
 } from "@mantine/core";
 import Head from "next/head";
 
-import { ReactNode } from "react";
-import { MapSchema, SetSchema } from "../types/schema";
+import { ReactNode, useEffect, useState } from "react";
+import { selectSettings } from "../store/settings";
+import { store } from "../store/store";
 import { Brand } from "./Brand";
 import { MainLinks } from "./MainLinks";
-import { CreatePlayerModal } from "./modal/CreatePlayerModal";
-import { CreateSetModal } from "./modal/CreateSetModal";
+import { MapModal } from "./modal/MapModal";
+import { PlayerModal } from "./modal/PlayerModal";
+import { SetModal } from "./modal/SetModal";
 import { PageTitle } from "./PageTitle";
 
 type Props = {
   children: ReactNode;
   title?: string;
   pageTitle: string;
-  sets?: SetSchema[];
-  maps?: MapSchema[];
 };
 
 export default function Layout({
   children,
   title = "GB Stats",
   pageTitle,
-  maps,
 }: Props) {
+  const [settings, setSettings] = useState(selectSettings(store.getState()));
+
+  useEffect(() => {
+    const storeUnsubscribe = store.subscribe(() => {
+      setSettings(selectSettings(store.getState()));
+    });
+
+    return () => {
+      storeUnsubscribe();
+    };
+  }, []);
+
   return (
     <div>
       <Head>
@@ -44,7 +55,7 @@ export default function Layout({
         withNormalizeCSS
         theme={{
           /** Put your mantine theme override here */
-          colorScheme: "dark",
+          colorScheme: settings.darkMode ? "dark" : "light",
         }}
       >
         <AppShell
@@ -66,10 +77,11 @@ export default function Layout({
             <Grid.Col span={5}>
               <PageTitle title={pageTitle} />
             </Grid.Col>
-            <Grid.Col span={3}>
+            <Grid.Col span={4}>
               <Group>
-                <CreateSetModal maps={maps} />
-                <CreatePlayerModal />
+                <SetModal />
+                <PlayerModal />
+                <MapModal />
               </Group>
             </Grid.Col>
           </Grid>

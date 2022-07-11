@@ -5,9 +5,8 @@ import { SetSchema } from "../../../types/schema";
 // Required fields in body: title
 // Optional fields in body: content
 export default async function handle(req, res) {
-  console.log(JSON.stringify(req.body, null, 2));
   const { id, createdAt, map, points, updatedAt, winner } = JSON.parse(
-    JSON.stringify(req.body)
+    req.body.data
   ) as SetSchema;
 
   const result = await prisma.set.create({

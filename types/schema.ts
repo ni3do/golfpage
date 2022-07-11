@@ -3,18 +3,18 @@ export type PlayerSchema = {
   name: string;
   createdAt: string;
   updatedAt: string;
-  Set: SetSchema[];
-  SetPoints: SetPointsSchema[];
+  sets: SetSchema[];
+  setPoints: SetPointsSchema[];
 };
 
 export type SetPointsSchema = {
   id: string;
   setId: number;
+  playerName: string;
   player: PlayerSchema;
   points: number;
   createdAt: string;
   updatedAt: string;
-  Set: SetSchema;
 };
 
 export type SetSchema = {
@@ -43,4 +43,8 @@ export type StatsSchema = {
 
 export type MapSchema = {
   name: string;
+};
+
+export type SettingsSchema = {
+  darkMode: boolean;
 };

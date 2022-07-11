@@ -1,36 +1,21 @@
-import { GetServerSideProps } from "next";
 import Layout from "../components/Layout";
 import Leaderboard from "../components/Leaderboard";
-import prisma from "../lib/prisma";
-import { MapSchema, SetSchema } from "../types/schema";
+import { setupMaps } from "../store/maps";
+import { setupPlayers } from "../store/players";
+import { setupSets } from "../store/sets";
+import { setupSettings } from "../store/settings";
+import { store } from "../store/store";
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const sets = await prisma.set.findMany({
-    include: {
-      points: { include: { player: true } },
-      winner: true,
-    },
-  });
+type Props = {};
 
-  const maps = await prisma.map.findMany({});
-
-  return {
-    props: {
-      sets: JSON.parse(JSON.stringify(sets)),
-      maps: JSON.parse(JSON.stringify(maps)),
-    },
-  };
-};
-
-type Props = {
-  sets: SetSchema[];
-  maps: MapSchema[];
-};
-
-export default function IndexPage({ sets, maps }: Props) {
+export default function IndexPage({}: Props) {
+  store.dispatch(setupMaps());
+  store.dispatch(setupPlayers());
+  store.dispatch(setupSets());
+  store.dispatch(setupSettings());
   return (
-    <Layout pageTitle="Leaderboard" maps={maps}>
-      <Leaderboard sets={sets} maps={maps} />
+    <Layout pageTitle="Leaderboard">
+      <Leaderboard />
     </Layout>
   );
 }
