@@ -86,14 +86,15 @@ export function SetModal({ set }: Props) {
           setId: -1,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          playerName: formValues.player0,
           player: {
             id: "",
             name: formValues.player0,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            Set: [] as SetSchema[],
-            SetPoints: [] as SetPointsSchema[],
-          },
+            sets: [] as SetSchema[],
+            setPoints: [] as SetPointsSchema[],
+          } as PlayerSchema,
           points: formValues.points0,
         } as SetPointsSchema,
         {
@@ -106,9 +107,9 @@ export function SetModal({ set }: Props) {
             name: formValues.player1,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            Set: [] as SetSchema[],
-            SetPoints: [] as SetPointsSchema[],
-          },
+            sets: [] as SetSchema[],
+            setPoints: [] as SetPointsSchema[],
+          } as PlayerSchema,
           points: formValues.points1,
         } as SetPointsSchema,
       ] as SetPointsSchema[];
@@ -120,8 +121,8 @@ export function SetModal({ set }: Props) {
             : formValues.player1,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        Set: [] as SetSchema[],
-        SetPoints: [] as SetPointsSchema[],
+        sets: [] as SetSchema[],
+        setPoints: [] as SetPointsSchema[],
       } as PlayerSchema;
       console.log(`CreateModal: ${JSON.stringify(body, null, 2)}`);
       store.dispatch(createSet(body as SetSchema));
