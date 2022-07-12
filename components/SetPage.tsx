@@ -1,21 +1,39 @@
-import { Badge, Table, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { selectMaps, setupMaps } from "../store/maps";
-import { selectPlayers, setupPlayers } from "../store/players";
-import { selectSets, setupSets } from "../store/sets";
+import { Badge, Table } from "@mantine/core";
+import { useEffect } from "react";
+import { connect } from "react-redux";
+import { selectMaps, setMaps, setupMaps } from "../store/maps";
+import { selectPlayers, setPlayers, setupPlayers } from "../store/players";
+import { selectSets, setSets, setupSets } from "../store/sets";
 import { store } from "../store/store";
 import { SetPointsSchema, SetSchema } from "../types/schema";
 
-type Props = {};
+const mapStateToProps = (state) => {
+  const sets = state.sets.value as SetSchema[];
+  const rows = sets.map((set: SetSchema) => (
+    <tr key={set.id}>
+      <td>{set.id}</td>
+      <td>
+        <Badge color="violet">{set.map.name}</Badge>
+      </td>
+      <td>
+        {set.points.map((sp: SetPointsSchema) => {
+          return <Badge color="violet">{sp.playerName}</Badge>;
+        })}
+      </td>
+      <td>
+        <Badge color="violet">{set.winner.name}</Badge>
+      </td>
+    </tr>
+  ));
+  return {
+    maps: selectMaps(state),
+    players: selectPlayers(state),
+    sets: sets,
+    rows: rows,
+  };
+};
 
-export default function Sets({}: Props) {
-  const [players, setPlayers] = useState(selectPlayers(store.getState()));
-  const [maps, setMaps] = useState(selectMaps(store.getState()));
-  const [sets, setSets] = useState(selectSets(store.getState()));
-  const [rows, setRows] = useState<any[]>([
-    { test: "name" },
-    { test: "name2" },
-  ]);
+function Sets({ maps, players, sets, rows }) {
   useEffect(() => {
     store.dispatch(setupMaps());
     store.dispatch(setupPlayers());
@@ -27,50 +45,24 @@ export default function Sets({}: Props) {
       setSets(selectSets(store.getState()));
     });
 
-    const reevaluateRows = () => {
-      setRows(
-        sets.map((set: SetSchema) => {
-          return (
-            <tr key={set.id}>
-              <td>{set.id}</td>
-              <td>
-                <Badge color="violet">{set.map.name}</Badge>
-              </td>
-              <td>
-                {set.points.map((sp: SetPointsSchema) => {
-                  return <Badge color="violet">{sp.playerName}</Badge>;
-                })}
-              </td>
-              <td>
-                <Badge color="violet">{set.winner.name}</Badge>
-              </td>
-            </tr>
-          );
-        })
-      );
-    };
-
     return () => {
       storeUnsubscribe();
     };
   }, []);
 
   return (
-    <>
-      {rows.map(({ id }: SetSchema) => (
-        <Text>{id}</Text>
-      ))}
-      <Table highlightOnHover>
-        <thead>
-          <tr>
-            <th>Set ID</th>
-            <th>Map</th>
-            <th>Players</th>
-            <th>Winner</th>
-          </tr>
-        </thead>
-        <tbody>{}</tbody>
-      </Table>
-    </>
+    <Table highlightOnHover>
+      <thead>
+        <tr>
+          <th>Set ID</th>
+          <th>Map</th>
+          <th>Players</th>
+          <th>Winner</th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </Table>
   );
 }
+
+export default connect(mapStateToProps)(Sets);

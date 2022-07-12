@@ -1,3 +1,4 @@
+import { Provider } from "react-redux";
 import Layout from "../components/Layout";
 import Sets from "../components/SetPage";
 import { setupMaps } from "../store/maps";
@@ -14,8 +15,10 @@ export default function IndexPage({}: Props) {
   store.dispatch(setupSets());
   store.dispatch(setupSettings());
   return (
-    <Layout pageTitle="Sets">
-      <Sets />
-    </Layout>
+    <Provider store={store}>
+      <Layout pageTitle="Sets">
+        <Sets />
+      </Layout>
+    </Provider>
   );
 }
