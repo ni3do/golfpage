@@ -33,7 +33,9 @@ export default function Leaderboard({}: Props) {
 
   const stats = getStats(sets) as StatsSchema;
 
-  for (let player of Object.keys(stats.playerStats)) {
+  for (let player of Object.keys(stats.playerStats).sort((a, b) => {
+    return stats.playerStats[b].wins - stats.playerStats[a].wins;
+  })) {
     const playerStats = stats.playerStats[player];
 
     let bestMap = "";

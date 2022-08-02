@@ -160,7 +160,7 @@ export function SetModal({ set }: Props) {
         />
         <Space h="sm" />
         <Select
-          placeholder="cryptobroether"
+          placeholder="Pick one"
           label="Player 0 Name"
           required
           data={players.map((player) => ({
@@ -170,13 +170,12 @@ export function SetModal({ set }: Props) {
           {...form.getInputProps("player0")}
         />
         <NumberInput
-          placeholder="3"
           label="Points player0"
           required
           {...form.getInputProps("points0")}
         />
         <Select
-          placeholder="grker"
+          placeholder="Pick one"
           label="Player 1 Name"
           required
           data={players.map((player) => ({
@@ -186,7 +185,6 @@ export function SetModal({ set }: Props) {
           {...form.getInputProps("player1")}
         />
         <NumberInput
-          placeholder="0"
           label="Points player1"
           required
           {...form.getInputProps("points1")}
